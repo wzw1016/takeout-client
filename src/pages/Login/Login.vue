@@ -9,47 +9,64 @@
         </div>
       </div>
       <div class="login_content">
-        <form>
-          <div :class="{on: MessageLogin}">
-            <section class="login_message">
-              <input type="tel" maxlength="11" placeholder="手机号" v-model="phoneNumber">
-              <button
-                class="get_verification"
-                :disabled="!isRightPhoneNumber || countdown > 0"
-                :class="{right_phone_number: isRightPhoneNumber}"
-                @click.prevent="sendCode"
-              >
-                {{countdown > 0 ? `短信已发送(${countdown}s)` : '获取验证码'}}
-              </button>
-            </section>
-            <section class="login_verification">
-              <input type="tel" maxlength="8" placeholder="验证码">
-            </section>
-            <section class="login_hint">
-              温馨提示：未注册超级外卖帐号的手机号，登录时将自动注册，且代表已同意
-              <a href="javascript:;">《用户服务协议》</a>
-            </section>
-          </div>
-          <div :class="{on: !MessageLogin}">
-            <section>
+        <ValidationObserver v-slot="{handleSubmit}">
+          <form>
+            <div v-if="MessageLogin" :class="{on: MessageLogin}">
               <section class="login_message">
-                <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名">
+                <ValidationProvider vid="phoneNumber" name="手机号码" :rules="{required: true, phoneNumber: true}" v-slot="{errors}">
+                  <input type="tel" maxlength="11" placeholder="手机号" v-model="phoneNumber">
+                  <span class="error">{{errors[0]}}</span>
+                </ValidationProvider>
+                <button
+                  class="get_verification"
+                  :disabled="!isRightPhoneNumber || countdown > 0"
+                  :class="{right_phone_number: isRightPhoneNumber}"
+                  @click.prevent="sendCode"
+                >
+                  {{countdown > 0 ? `短信已发送(${countdown}s)` : '获取验证码'}}
+                </button>
               </section>
               <section class="login_verification">
-                <input :type="showPwd ? 'text' : 'password' " maxlength="8" placeholder="密码">
-                <div class="switch_button" :class="showPwd ? 'on' : 'off'" @click="showPwd = !showPwd">
-                  <div class="switch_circle" :class="{right: showPwd}"></div>
-                  <span class="switch_text">{{showPwd ? 'abc' : ''}}</span>
-                </div>
+                <ValidationProvider vid="SMSVerficationCode" name="短信验证码" rules="required|SMSVerficationCode" v-slot="{errors}">
+                  <input type="tel" maxlength="6" placeholder="短信验证码" v-model="SMSVerficationCode">
+                  <span class="error">{{errors[0]}}</span>
+                </ValidationProvider>
               </section>
-              <section class="login_message">
-                <input type="text" maxlength="11" placeholder="验证码">
-                <img class="get_verification" src="./images/captcha.svg" alt="captcha">
+              <section class="login_hint">
+                温馨提示：未注册超级外卖帐号的手机号，登录时将自动注册，且代表已同意
+                <a href="javascript:;">《用户服务协议》</a>
               </section>
-            </section>
-          </div>
-          <button class="login_submit">登录</button>
-        </form>
+            </div>
+            <div v-else :class="{on: !MessageLogin}">
+              <section>
+                <section class="login_message">
+                  <ValidationProvider vid="account" name="手机/邮箱/用户名" rules="required|account" v-slot="{errors}">
+                    <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名" v-model="account">
+                    <span class="error">{{errors[0]}}</span>
+                  </ValidationProvider>
+                </section>
+                <section class="login_verification">
+                  <ValidationProvider vid="password" name="密码" rules="required|password" v-slot="{errors}">
+                    <input :type="showPwd ? 'text' : 'password'" maxlength="12" placeholder="密码" v-model="password">
+                    <span class="error">{{errors[0]}}</span>
+                  </ValidationProvider>
+                  <div class="switch_button" :class="showPwd ? 'on' : 'off'" @click="showPwd = !showPwd">
+                    <div class="switch_circle" :class="{right: showPwd}"></div>
+                    <span class="switch_text">{{showPwd ? 'abc' : ''}}</span>
+                  </div>
+                </section>
+                <section class="login_message">
+                  <ValidationProvider vid="captch" name="验证码" rules="required|captcha" v-slot="{errors}">
+                    <input type="text" maxlength="4" placeholder="验证码" v-model="captcha">
+                    <span class="error">{{errors[0]}}</span>
+                  </ValidationProvider>
+                  <img class="get_verification" src="./images/captcha.svg" alt="captcha">
+                </section>
+              </section>
+            </div>
+            <button class="login_submit" @click.prevent="handleSubmit(login)">登录</button>
+          </form>
+        </ValidationObserver>
         <a href="javascript:;" class="about_us">关于我们</a>
       </div>
       <a href="javascript:" class="go_back">
@@ -65,9 +82,13 @@
     data () {
       return {
         MessageLogin: true, // true - 短信登录，false - 密码登录
-        phoneNumber: '',
         countdown: 0,
-        showPwd: false
+        showPwd: false,
+        phoneNumber: '',
+        SMSVerficationCode: '',
+        account: '',
+        password: '',
+        captcha: ''
       }
     },
     computed: {
@@ -85,6 +106,9 @@
             clearTimeout(intervalId)
           }
         }, 1000)
+      },
+      login () {
+        alert('login')
       }
     }
   }
@@ -119,7 +143,7 @@
               font-weight 700
               border-bottom 2px solid #02a774
       .login_content
-        >form
+        form
           >div
             display none
             &.on

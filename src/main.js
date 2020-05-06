@@ -5,6 +5,7 @@ import router from './router'
 import Header from './components/Header/Header'
 import store from './store'
 import Star from './components/Star/Star'
+import './common/utils/validator'
 
 Vue.component('Header', Header)
 Vue.component('Star', Star)
