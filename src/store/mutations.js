@@ -4,9 +4,11 @@ import {
   RECEIVE_ADDRESS,
   RECEIVE_FOOD_CATEGORIES,
   RECEIVE_SHOP_LIST,
+  // RECEIVE_SMS_VERIFICATION_CODE,
 } from './mutation-types'
 
 export default {
+  /* Msite */
   [RECEIVE_ADDRESS] (state, address) {
     state.address = address
   },
@@ -16,4 +18,9 @@ export default {
   [RECEIVE_SHOP_LIST] (state, shopList) {
     state.shopList = shopList
   },
+
+  /* Login */
+  /* [RECEIVE_SMS_VERIFICATION_CODE] (state, message) {
+    state.SMSVerificationCode = SMSVerificationCode
+  } */
 }

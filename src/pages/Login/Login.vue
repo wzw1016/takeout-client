@@ -60,7 +60,7 @@
                     <input type="text" maxlength="4" placeholder="验证码" v-model="captcha">
                     <span class="error">{{errors[0]}}</span>
                   </ValidationProvider>
-                  <img class="get_verification" src="./images/captcha.svg" alt="captcha">
+                  <img class="get_verification" src="http://localhost:4000/captcha" alt="captcha" @click="updateCaptcha" ref="captcha">
                 </section>
               </section>
             </div>
@@ -81,11 +81,11 @@
     name: 'Login',
     data () {
       return {
-        MessageLogin: true, // true - 短信登录，false - 密码登录
+        MessageLogin: false, // true - 短信登录，false - 密码登录
         countdown: 0,
         showPwd: false,
         phoneNumber: '',
-        SMSVerficationCode: '',
+        SMSVerificationCode: '',
         account: '',
         password: '',
         captcha: ''
@@ -109,6 +109,9 @@
       },
       login () {
         alert('login')
+      },
+      updateCaptcha () {
+        this.$refs.captcha.src = "http://localhost:4000/captcha?time=" + Date.now()
       }
     }
   }

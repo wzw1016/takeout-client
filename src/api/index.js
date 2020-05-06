@@ -17,7 +17,7 @@ export const reqShopListByGeohash = ({latitude, longitude}) => ajax(BASE + '/sho
 })
 
 /* 4、根据经纬度和关键字搜索商铺列表 */
-export const searchShopList = ({latitude, longitude}, keyword) => ajax.get('/search_shops', {
+export const reqSearchShopListByGeohashAndKeyword = ({latitude, longitude}, keyword) => ajax.get('/search_shops', {
   params: {
     geohash: `${latitude},${longitude}`,
     keyword
@@ -25,7 +25,7 @@ export const searchShopList = ({latitude, longitude}, keyword) => ajax.get('/sea
 })
 
 /* 5、获取一次性验证码 */
-export const reqCaptcha = () => ajax('/captcha')
+// export const reqCaptcha = () => ajax('/captcha')
 
 /* 6、用户名密码登陆 */
 export const regLogin = ({name, pwd, captcha}) => ajax({
@@ -39,7 +39,7 @@ export const regLogin = ({name, pwd, captcha}) => ajax({
 })
 
 /* 7、发送短信验证码 */
-export const sendCode = () => ajax('/sendcode')
+export const reqsendCode = (phone) => ajax(BASE + '/sendcode', {params: {phone}})
 
 // 8、手机号验证码登陆
 export const phoneLogin = ({phone, code}) => ajax.post('/login_sms', {
