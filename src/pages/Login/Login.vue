@@ -27,8 +27,8 @@
                 </button>
               </section>
               <section class="login_verification">
-                <ValidationProvider vid="SMSVerficationCode" name="短信验证码" rules="required|SMSVerficationCode" v-slot="{errors}">
-                  <input type="tel" maxlength="6" placeholder="短信验证码" v-model="SMSVerficationCode">
+                <ValidationProvider vid="SMSVerificationCode" name="短信验证码" rules="required|SMSVerificationCode" v-slot="{errors}">
+                  <input type="tel" maxlength="6" placeholder="短信验证码" v-model="SMSVerificationCode">
                   <span class="error">{{errors[0]}}</span>
                 </ValidationProvider>
               </section>
