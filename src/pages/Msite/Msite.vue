@@ -28,7 +28,7 @@
       <img v-else src="./images/msite_back.svg" alt="loading">
     </nav>
     <!--首页附近商家-->
-    <shopList />
+    <ShopList />
   </section>
 </template>
 
@@ -38,7 +38,8 @@
   import 'swiper/css/swiper.min.css'
   import {chunk} from 'lodash'
 
-  import shopList from '../../components/shopList/shopList.vue'
+  import ShopList from '../../components/ShopList/ShopList'
+  
   export default {
     name: 'Msite',
     mounted () {
@@ -88,7 +89,7 @@
       },
     },
     components: {
-      shopList
+      ShopList
     }
   }
 </script>

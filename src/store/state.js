@@ -9,5 +9,6 @@ export default {
   shopList: [],
 
   /* Login */
-  // SMSVerificationCode: '',
+  user: {},
+  token: localStorage.getItem('token_key') || ''
 }

@@ -6,18 +6,25 @@ const BASE = '/api'
 export const reqAddressByGeohash = ({latitude, longitude}) => ajax(BASE + `/position/${latitude},${longitude}`)
 
 /* 2、获取食品分类列表 */
-export const reqFoodCategoryList = () => ajax.get(BASE + '/index_category')
+export const reqFoodCategoryList = () => ajax.get(BASE + '/index_category', {
+  headers: {
+    needToken: true
+  }
+})
 
 /* 3、根据经纬度获取商铺列表 */
 export const reqShopListByGeohash = ({latitude, longitude}) => ajax(BASE + '/shops', {
   params: {
     latitude,
     longitude
+  },
+  headers: {
+    needToken: true
   }
 })
 
 /* 4、根据经纬度和关键字搜索商铺列表 */
-export const reqSearchShopListByGeohashAndKeyword = ({latitude, longitude}, keyword) => ajax.get('/search_shops', {
+export const reqSearchShopListByGeohashAndKeyword = ({latitude, longitude}, keyword) => ajax.get(BASE + '/search_shops', {
   params: {
     geohash: `${latitude},${longitude}`,
     keyword
@@ -25,12 +32,12 @@ export const reqSearchShopListByGeohashAndKeyword = ({latitude, longitude}, keyw
 })
 
 /* 5、获取一次性验证码 */
-// export const reqCaptcha = () => ajax('/captcha')
+// export const reqCaptcha = () => ajax(BASE + '/captcha')
 
 /* 6、用户名密码登陆 */
-export const regLogin = ({name, pwd, captcha}) => ajax({
+export const reqLogin = ({name, pwd, captcha}) => ajax({
   method: "POST",
-  url: '/login_pwd',
+  url: BASE + '/login_pwd',
   data: {
     name,
     pwd,
@@ -39,13 +46,17 @@ export const regLogin = ({name, pwd, captcha}) => ajax({
 })
 
 /* 7、发送短信验证码 */
-export const reqsendCode = (phone) => ajax(BASE + '/sendcode', {params: {phone}})
+export const reqSendCode = (phone) => ajax(BASE + '/sendcode', {params: {phone}})
 
 // 8、手机号验证码登陆
-export const phoneLogin = ({phone, code}) => ajax.post('/login_sms', {
+export const reqPhoneLogin = ({phone, code}) => ajax.post(BASE + '/login_sms', {
   phone,
   code
 })
 
-/* 9、根据会话获取用户信息 */
-export const reqUserInfo = () => ajax.get('/userinfo')
+/* 9、自动登录 */
+export const reqAutoLogin = () => ajax.get(BASE + '/auto_login', {
+  headers: {
+    needToken: true
+  }
+})

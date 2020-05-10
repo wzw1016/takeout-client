@@ -4,7 +4,10 @@ import {
   RECEIVE_ADDRESS,
   RECEIVE_FOOD_CATEGORIES,
   RECEIVE_SHOP_LIST,
-  // RECEIVE_SMS_VERIFICATION_CODE,
+  RECEIVE_USER,
+  RESET_USER,
+  RECEIVE_TOKEN,
+  RESET_TOKEN
 } from './mutation-types'
 
 export default {
@@ -20,7 +23,17 @@ export default {
   },
 
   /* Login */
-  /* [RECEIVE_SMS_VERIFICATION_CODE] (state, message) {
-    state.SMSVerificationCode = SMSVerificationCode
-  } */
+  [RECEIVE_USER] (state, {user}) {
+    state.user = user
+  },
+  [RESET_USER] (state) {
+    state.user = {}
+  },
+  
+  [RECEIVE_TOKEN] (state, {token}) {
+    state.token = token
+  },
+  [RESET_TOKEN] (state) {
+    state.token = ''
+  },
 }

@@ -1,16 +1,18 @@
 /* 包含n个间接更改state状态数据的方法的对象 */
-
 import {
   reqAddressByGeohash,
   reqFoodCategoryList,
   reqShopListByGeohash,
-  // reqsendCode
+  reqAutoLogin
 } from '../api'
 import {
   RECEIVE_ADDRESS,
   RECEIVE_FOOD_CATEGORIES,
   RECEIVE_SHOP_LIST,
-  // RECEIVE_SMS_VERIFICATION_CODE
+  RECEIVE_USER,
+  RESET_USER,
+  RECEIVE_TOKEN,
+  RESET_TOKEN
 } from './mutation-types'
 
 export default {
@@ -58,10 +60,32 @@ export default {
   /* 
     Login
   */
-  /* async getSMSVerificationCode ({commit}, phone) {
-    // 1. 调用用接口请求函数发送请求
-    const result = await reqsendCode(phone)
-    // 2. 有了结果，提交mutation
-    result.code === 0 ? commit(RECEIVE_SMS_VERIFICATION_CODE, '验证码发送成功') : commit(RECEIVE_SMS_VERIFICATION_CODE, result.msg)
-  } */
+  saveUser ({commit}, user) {
+    const {token} = user
+    // 将token保存到localStorage中
+    localStorage.setItem('token_key', token)
+    commit(RECEIVE_TOKEN, {token})
+
+    delete user.token
+    commit(RECEIVE_USER, {user})
+  },
+  resetUser ({commit}) {
+    commit(RESET_USER)
+  },
+  logout ({commit}) {
+    commit(RESET_USER)
+
+    commit(RESET_TOKEN)
+    
+    localStorage.removeItem('token_key')
+  },
+  async autoLogin ({commit, state}) {
+    if (state.token) {
+      const result = await reqAutoLogin()
+      const user = result.data
+      if (result.code === 0) {
+        commit(RECEIVE_USER, {user})
+      }
+    }
+  }
 }

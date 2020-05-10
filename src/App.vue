@@ -11,6 +11,9 @@
     name: 'App',
     mounted () {
       this.$store.dispatch('getAddressByGeohash')
+      
+      // 将token在请求头Authorization中携带，实现自动登录
+      this.$store.dispatch('autoLogin')
     },
     components: {
       FooterGuide

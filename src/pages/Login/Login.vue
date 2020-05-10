@@ -4,14 +4,14 @@
       <div class="login_header">
         <h2 class="login_logo">超级外卖</h2>
         <div class="login_header_title">
-          <a href="javascript:;" :class="{on: MessageLogin}" @click="MessageLogin = true">短信登录</a>
-          <a href="javascript:;" :class="{on: !MessageLogin}" @click="MessageLogin = false">密码登录</a>
+          <a href="javascript:;" :class="{on: isMessageLogin}" @click="isMessageLogin = true">短信登录</a>
+          <a href="javascript:;" :class="{on: !isMessageLogin}" @click="isMessageLogin = false">密码登录</a>
         </div>
       </div>
       <div class="login_content">
         <ValidationObserver v-slot="{handleSubmit}">
           <form>
-            <div v-if="MessageLogin" :class="{on: MessageLogin}">
+            <div v-if="isMessageLogin" :class="{on: isMessageLogin}">
               <section class="login_message">
                 <ValidationProvider vid="phoneNumber" name="手机号码" :rules="{required: true, phoneNumber: true}" v-slot="{errors}">
                   <input type="tel" maxlength="11" placeholder="手机号" v-model="phoneNumber">
@@ -37,7 +37,7 @@
                 <a href="javascript:;">《用户服务协议》</a>
               </section>
             </div>
-            <div v-else :class="{on: !MessageLogin}">
+            <div v-else :class="{on: !isMessageLogin}">
               <section>
                 <section class="login_message">
                   <ValidationProvider vid="account" name="手机/邮箱/用户名" rules="required|account" v-slot="{errors}">
@@ -69,7 +69,7 @@
         </ValidationObserver>
         <a href="javascript:;" class="about_us">关于我们</a>
       </div>
-      <a href="javascript:" class="go_back">
+      <a href="javascript:" class="go_back"  @click="$router.back()">
         <i class="iconfont icon-jiantou2"></i>
       </a>
     </div>
@@ -77,11 +77,17 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import { Toast, MessageBox  } from 'mint-ui'
+  import {
+    reqSendCode,
+    reqPhoneLogin,
+    reqLogin
+  } from '../../api'
   export default {
     name: 'Login',
     data () {
       return {
-        MessageLogin: false, // true - 短信登录，false - 密码登录
+        isMessageLogin: false, // true - 短信登录，false - 密码登录
         countdown: 0,
         showPwd: false,
         phoneNumber: '',
@@ -98,18 +104,62 @@
       }
     },
     methods: {
-      sendCode () {
+      async sendCode () {
         this.countdown = 30
         const intervalId = setInterval(() => {
-          this.countdown--
           if (this.countdown === 0) {
             clearTimeout(intervalId)
           }
+          this.countdown--
         }, 1000)
+
+        const {phoneNumber} = this
+        const result = await reqSendCode(phoneNumber)
+        if (result.code === 0) {
+          Toast('验证码发送成功')
+        } else {
+          MessageBox.alert(result.msg)
+          this.countdown = 0
+        }
       },
-      login () {
-        alert('login')
+
+      async login () {
+        const {isMessageLogin, phoneNumber, SMSVerificationCode, account, password, captcha, updateCaptcha} = this
+
+        let loginWay, data
+        if (isMessageLogin) {
+          loginWay = reqPhoneLogin
+          data = {
+            phone: phoneNumber,
+            code: SMSVerificationCode
+          }
+        } else {
+          loginWay = reqLogin
+          data = {
+            name: account,
+            pwd: password,
+            captcha
+          }
+        }
+
+        const result = await loginWay(data)
+
+        if (result.code === 0) {
+          const user = result.data
+          Toast('login success')
+          this.$store.dispatch('saveUser', user)
+          this.$router.replace('/profile')
+        } else {
+          if (result.msg === '用户名或密码不正确!') {
+            updateCaptcha()
+          }
+          if (result.msg === '手机号或验证码不正确') {
+            this.countdown = 0
+          }
+          MessageBox.alert(result.msg)
+        }
       },
+
       updateCaptcha () {
         this.$refs.captcha.src = "http://localhost:4000/captcha?time=" + Date.now()
       }
