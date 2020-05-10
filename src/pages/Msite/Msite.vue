@@ -54,7 +54,11 @@
       }
     },
     computed: {
-      ...mapState(['address', 'categories']),
+      // ...mapState(['address', 'categories']),
+      ...mapState({
+        address: state => state.msite.address,
+        categories: state => state.msite.categories
+      }),
       /* categoriesArr () {
         const outerArr = []
         let innerArr = []

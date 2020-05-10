@@ -7,6 +7,8 @@ import store from './store'
 import Star from './components/Star/Star'
 import './common/utils/validator'
 
+import './mock/mockServer'
+
 Vue.component('Header', Header)
 Vue.component('Star', Star)
 

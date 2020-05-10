@@ -6,7 +6,7 @@ import Profile from '../pages/Profile/Profile'
 import Login from '../pages/Login/Login'
 import Shop from '../pages/Shop/Shop'
 import Goods from '../pages/Shop/Goods/Goods'
-import Rating from '../pages/Shop/Rating/Rating'
+import Ratings from '../pages/Shop/Ratings/Ratings'
 import Info from '../pages/Shop/Info/Info'
 
 const routes = [
@@ -51,8 +51,8 @@ const routes = [
         component: Goods
       },
       {
-        path: '/shop/rating',
-        component: Rating
+        path: '/shop/ratings',
+        component: Ratings
       },
       {
         path: '/shop/info',

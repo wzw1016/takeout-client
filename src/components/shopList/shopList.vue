@@ -66,7 +66,9 @@
   export default {
     name: 'shopList',
     computed: {
-      ...mapState(['shopList'])
+      ...mapState({
+        shopList: state => state.msite.shopList
+      })
     }
   }
 </script>

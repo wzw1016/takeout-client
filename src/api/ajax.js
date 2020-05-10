@@ -17,7 +17,7 @@ axios.interceptors.request.use(config => {
   
   // 判断请求是否需要token
   if (config.headers.needToken) {
-    const token = store.state.token
+    const token = store.state.login.token
 
     // state中没有token，不发送请求
     if (!token) {

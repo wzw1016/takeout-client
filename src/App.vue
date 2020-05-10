@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-view></router-view>
+    <router-view />
     <FooterGuide v-show="$route.meta.showFooter" />
   </div>
 </template>
@@ -10,6 +10,7 @@
   export default {
     name: 'App',
     mounted () {
+      
       this.$store.dispatch('getAddressByGeohash')
       
       // 将token在请求头Authorization中携带，实现自动登录

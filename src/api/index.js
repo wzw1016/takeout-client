@@ -60,3 +60,10 @@ export const reqAutoLogin = () => ajax.get(BASE + '/auto_login', {
     needToken: true
   }
 })
+
+/* 
+  mock
+*/
+export const reqShopGoods = () => ajax('/shop_goods')
+export const reqShopRatings = () => ajax('/shop_ratings')
+export const reqShopInfo = () => ajax('/shop_info')

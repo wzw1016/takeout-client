@@ -6,7 +6,7 @@
         <router-link to="/shop/goods" replace>商品</router-link>
       </div>
       <div class="tab-item">
-        <router-link to="/shop/rating" replace>评分</router-link>
+        <router-link to="/shop/ratings" replace>评分</router-link>
       </div>
       <div class="tab-item">
         <router-link to="/shop/Info" replace>店铺</router-link>
@@ -20,6 +20,11 @@
   import ShopHeader from '../../components/ShopHeader/ShopHeader'
   export default {
     name: 'Shop',
+    mounted () {
+      this.$store.dispatch('getShopGoods')
+      this.$store.dispatch('getShopRatings')
+      this.$store.dispatch('getShopInfo')
+    },
     components: {
       ShopHeader
     }

@@ -105,7 +105,9 @@
   export default {
     name: 'Profile',
     computed: {
-      ...mapState(['user'])
+      ...mapState({
+        user: state => state.login.user
+      })
     },
     methods: {
       logout () {
