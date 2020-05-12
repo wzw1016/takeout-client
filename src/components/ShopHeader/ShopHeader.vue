@@ -34,7 +34,7 @@
           <span class="content-tag">
             <span class="mini-tag">{{info.supports && info.supports[0].name}}</span>
           </span>
-          <span class="activity-content">{{info.supports && info.supports[0].content}}</span>
+          <span class="activity-content ellipsis">{{info.supports && info.supports[0].content}}</span>
         </div>
       </div>
       <div class="discounts-right" @click="isShowSupports = true">
@@ -102,7 +102,9 @@
             <span class="iconfont icon-close"></span>
           </div>
         </div>
-        <div class="activity-sheet-cover" @click="isShowSupports = false"></div>
+        <transition name="fade2">
+          <div class="activity-sheet-cover" @click="isShowSupports = false"></div>
+        </transition>
       </div>
     </transition>
   </div>
@@ -422,8 +424,8 @@
       height 100%
       z-index 99
       &.move-enter-active, &.move-leave-active
-        transition opacity .1s
-      &.move-enter-active, &.move-leave-active
+        transition opacity .5s
+      &.move-enter, &.move-leave-to
         opacity 0
       .activity-sheet-content
         position absolute
@@ -498,6 +500,10 @@
         top 0
         left 0
         background-color rgba(0, 0, 0, .5)
+        /* &.fade2-enter-active, &.fade2-leave-active
+          transition opacity .5s
+        &.fade2-enter, &.fade2-leave-to
+          opacity 0 */
 </style>
 
 

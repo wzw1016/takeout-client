@@ -1,9 +1,15 @@
 <template>
   <div>
     <div class="goods">
+
       <div class="menu-wrapper" ref="menuWrapper">
-        <ul>
-          <li class="menu-item current" v-for="good in goods" :key="good.name">
+        <ul ref="menuUl">
+          <li class="menu-item"
+            :class="{current: currentIndex === index}"
+            v-for="(good, index) in goods"
+            :key="good.name"
+            @click="FoodsMenuScroll(index)"
+          >
             <span class="text bottom-border-1px">
               <img class="icon" :src="good.icon" v-if="good.icon">
               {{good.name}}
@@ -11,8 +17,9 @@
           </li>
         </ul>
       </div>
+
       <div class="foods-wrapper" ref="foodsWrapper">
-        <ul>
+        <ul ref="foodsUl">
           <li class="food-list-hook" v-for="(good, index) in goods" :key="index">
             <h1 class="title">{{good.name}}</h1>
             <ul>
@@ -39,6 +46,7 @@
           </li>
         </ul>
       </div>
+
     </div>
   </div>
 </template>
@@ -49,23 +57,93 @@
 
   export default {
     name: 'Goods',
+    data () {
+      return {
+        foodsScrollY: 0,
+        tops: [],
+      }
+    },
+    mounted () {
+      if (this.goods.length) {
+        this._initScroll()
+        this._initTops()
+      }
+    },
+    
     computed: {
       ...mapState({
         goods: state => state.shop.goods
-      })
+      }),
+
+      currentIndex () {
+        const {tops, foodsScrollY} = this
+        const index = tops.findIndex((top, index) => foodsScrollY >= top && foodsScrollY < tops[index + 1])
+
+        return index
+      }
     },
+
     watch: {
       goods () {
         this.$nextTick(() => {
-          new BScroll(this.$refs.menuWrapper, {
-            
-          })
-          new BScroll(this.$refs.foodsWrapper, {
-
-          })
+          this._initScroll()
+          this._initTops()
         })
       }
     },
+    
+
+    methods: {
+      _initScroll () {
+        this.menuScroll =  new BScroll(this.$refs.menuWrapper, {
+          swipeTime: 600,
+          click: true
+        })
+        this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
+          swipeTime: 600, // 设置 momentum 动画(惯性动画)的动画时长
+          click: true,
+          probeType: 2,
+        })
+
+
+        const menuLis = this.$refs.menuUl.children
+        // eslint-disable-next-line no-unused-vars  
+        this.foodsScroll.on('scroll', ({x, y}) => {
+          this.foodsScrollY = Math.abs(y)
+          // console.log('scrollY ', y)
+
+          this.menuScroll.scrollToElement(menuLis[this.currentIndex], 300)
+        })
+        // eslint-disable-next-line no-unused-vars  
+        this.foodsScroll.on('scrollEnd', ({x, y}) => {
+          this.foodsScrollY = Math.abs(y)
+          // console.log('scrollEndY ', y)
+          this.menuScroll.scrollToElement(menuLis[this.currentIndex], 300)
+        })
+        
+      },
+      _initTops () {
+        const tops = []
+        let top = 0
+        tops.push(top)
+
+        const lis = this.$refs.foodsUl.children
+        Array.prototype.forEach.call(lis, li => {
+          top += li.clientHeight
+          tops.push(top)
+        })
+        this.tops = tops
+      },
+
+      FoodsMenuScroll (index) {
+        const top = this.tops[index]
+
+        // 立即更新foodsScrollY，让 menuScroll 滚动不停顿
+        this.foodsScrollY = top
+
+        this.foodsScroll.scrollTo(0, -top, 300)
+      }
+    }
   }
 </script>
 
