@@ -1,7 +1,7 @@
 <template>
   <div class="shop-header">
     <nav class="shop-nav" :style="{backgroundImage: `url(${info.bgImg})`}">
-      <a class="back" @click="$router.back()">
+      <a class="back" @click="goBack">
         <i class="iconfont icon-arrow_left"/>
       </a>
     </nav>
@@ -125,6 +125,12 @@
       ...mapState({
         info: state => state.shop.info
       })
+    },
+    methods: {
+      goBack () {
+        this.$router.back()
+        this.$store.dispatch('resetFoodCarts')
+      }
     }
   }
 </script>
@@ -424,7 +430,7 @@
       height 100%
       z-index 99
       &.move-enter-active, &.move-leave-active
-        transition opacity .5s
+        transition opacity .3s
       &.move-enter, &.move-leave-to
         opacity 0
       .activity-sheet-content

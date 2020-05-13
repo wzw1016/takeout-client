@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="goods">
-
       <div class="menu-wrapper" ref="menuWrapper">
         <ul ref="menuUl">
           <li class="menu-item"
@@ -38,7 +37,7 @@
                     <span class="old" v-if="food.oldPrice">￥{{food.oldPrice}}</span>
                   </div>
                   <div class="cartcontrol-wrapper">
-                    CartControl组件
+                    <CartControl :food="food" />
                   </div>
                 </div>
               </li>
@@ -46,14 +45,16 @@
           </li>
         </ul>
       </div>
-
     </div>
+    <ShopCart />
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import {mapState} from 'vuex'
   import BScroll from '@better-scroll/core'
+
+  import ShopCart from '../../../components/ShopCart/ShopCart'
 
   export default {
     name: 'Goods',
@@ -65,6 +66,8 @@
     },
     mounted () {
       if (this.goods.length) {
+        // eslint-disable-next-line no-debugger
+        // debugger
         this._initScroll()
         this._initTops()
       }
@@ -86,13 +89,16 @@
     watch: {
       goods () {
         this.$nextTick(() => {
-          this._initScroll()
-          this._initTops()
+          // eslint-disable-next-line no-debugger
+          // debugger
+          if (!this.menuScroll || !this.foodsScroll) {
+            this._initScroll()
+            this._initTops()
+          }
         })
       }
     },
     
-
     methods: {
       _initScroll () {
         this.menuScroll =  new BScroll(this.$refs.menuWrapper, {
@@ -143,6 +149,9 @@
 
         this.foodsScroll.scrollTo(0, -top, 300)
       }
+    },
+    components: {
+      ShopCart
     }
   }
 </script>

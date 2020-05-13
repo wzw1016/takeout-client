@@ -6,11 +6,13 @@ import Header from './components/Header/Header'
 import store from './store'
 import Star from './components/Star/Star'
 import './common/utils/validator'
+import CartControl from './components/CartControl/CartControl'
 
 import './mock/mockServer'
 
 Vue.component('Header', Header)
 Vue.component('Star', Star)
+Vue.component('CartControl', CartControl)
 
 new Vue({
   render: h => h(App),

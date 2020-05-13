@@ -1,6 +1,3 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-
 import {
   reqAutoLogin
 } from '../../api'
@@ -70,8 +67,6 @@ const actions = {
 }
 
 const getters = {}
-
-Vue.use(Vuex)
 
 export default {
   state,

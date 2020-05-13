@@ -1,6 +1,3 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-
 import {
   reqAddressByGeohash,
   reqFoodCategoryList,
@@ -78,8 +75,6 @@ const actions = {
 }
 
 const getters = {}
-
-Vue.use(Vuex)
 
 export default {
   state,
